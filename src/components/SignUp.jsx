@@ -2,25 +2,31 @@ import React, { useState } from "react";
 import { Card, Button, Form, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-
-
 const SignUp = () => {
   const [validated, setValidated] = useState(false);
-  //datas
-  const [name,setName]= useState("");
-  const [lastName,setLastName]= useState("");
-  const [address,setAddress]= useState("");
-  const [email,setEmail]= useState("");
-  const [organization,setOrganization]= useState("");
-  const [password,setPassword]= useState("");
-  const [repeatPassword,setRepeatPassword]= useState("");
+  const [id, setId] = useState("");
+  const [name, setName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [address, setAddress] = useState("");
+  const [email, setEmail] = useState("");
+  const [organization, setOrganization] = useState("");
+  const [password, setPassword] = useState("");
+  const [repeatPassword, setRepeatPassword] = useState("");
 
   const handleSubmit = (event) => {
-    let item = {name, lastName, address, email, organization, password, repeatPassword}
+    let item = {
+      id,
+      name,
+      lastName,
+      address,
+      email,
+      organization,
+      password,
+      repeatPassword,
+    };
     console.warn(item);
 
-    fetch
-
+    fetch;
 
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
@@ -32,7 +38,6 @@ const SignUp = () => {
   };
 
   return (
-    
     <div
       style={{
         display: "flex",
@@ -68,6 +73,31 @@ const SignUp = () => {
               <Form.Group
                 as={Row}
                 className="mb-3"
+                controlId="formHorizontalIdentificationNumber"
+              >
+                <Form.Label
+                  column
+                  sm={4}
+                  style={{ color: "#23294B", fontWeight: "bold" }}
+                >
+                  ID *
+                </Form.Label>
+                <Col sm={8}>
+                  <Form.Control
+                    required
+                    type="text"
+                    onChange={(e) => setId(e.target.value)}
+                    placeholder="Enter identification number"
+                  />
+                  <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">
+                    Invalid identification number.
+                  </Form.Control.Feedback>
+                </Col>
+              </Form.Group>
+              <Form.Group
+                as={Row}
+                className="mb-3"
                 controlId="formHorizontalName"
               >
                 <Form.Label
@@ -78,7 +108,12 @@ const SignUp = () => {
                   Name *
                 </Form.Label>
                 <Col sm={8}>
-                  <Form.Control required type="text" onChange={(e)=>setName(e.target.value)} placeholder="Enter name" />
+                  <Form.Control
+                    required
+                    type="text"
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Enter name"
+                  />
                   <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                   <Form.Control.Feedback type="invalid">
                     Invalid name.
@@ -101,7 +136,7 @@ const SignUp = () => {
                   <Form.Control
                     required
                     type="text"
-                    onChange={(e)=>setLastName(e.target.value)}
+                    onChange={(e) => setLastName(e.target.value)}
                     placeholder="Enter last name"
                   />
                   <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
@@ -126,7 +161,7 @@ const SignUp = () => {
                   <Form.Control
                     required
                     type="text"
-                    onChange={(e)=>setAddress(e.target.value)}
+                    onChange={(e) => setAddress(e.target.value)}
                     placeholder="Enter an address"
                   />
                   <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
@@ -151,7 +186,7 @@ const SignUp = () => {
                   <Form.Control
                     required
                     type="email"
-                    onChange={(e)=>setEmail(e.target.value)}
+                    onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter an email"
                   />
                   <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
@@ -173,8 +208,11 @@ const SignUp = () => {
                   Organization *
                 </Form.Label>
                 <Col sm={8}>
-                  <Form.Select required onChange={(e) => setOrganization(e.target.value)}>
-                    <option value="">Select an organization</option> {/* Añadir una opción predeterminada vacía */}
+                  <Form.Select
+                    required
+                    onChange={(e) => setOrganization(e.target.value)}
+                  >
+                    <option value="">Select an organization</option>
                     <option value="UPTC">UPTC</option>
                   </Form.Select>
                   <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
@@ -182,7 +220,6 @@ const SignUp = () => {
                     Please select an organization.
                   </Form.Control.Feedback>
                 </Col>
-
               </Form.Group>
               <Form.Group
                 as={Row}
@@ -200,7 +237,7 @@ const SignUp = () => {
                   <Form.Control
                     required
                     type="password"
-                    onChange={(e)=>setPassword(e.target.value)}
+                    onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter a password"
                   />
                   <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
@@ -225,7 +262,7 @@ const SignUp = () => {
                   <Form.Control
                     required
                     type="password"
-                    onChange={(e)=>setRepeatPassword(e.target.value)}
+                    onChange={(e) => setRepeatPassword(e.target.value)}
                     placeholder="Repeat password"
                   />
                   <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
