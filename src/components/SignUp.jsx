@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { Card, Button, Form, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
+
+
+
 const SignUp = () => {
   const [validated, setValidated] = useState(false);
   const [id, setId] = useState("");
@@ -12,6 +15,7 @@ const SignUp = () => {
   const [organization, setOrganization] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
+  const link = Link();
 
   const handleSubmit = (event) => {
     let item = {
@@ -26,7 +30,19 @@ const SignUp = () => {
     };
     console.warn(item);
 
-    fetch;
+//Añadir endpoint
+    let result = fetch("",{
+      method:'POST',
+      body:JSON.stringify(item),
+      headers:{
+        "Content-Type": 'application/json',
+        "Accept" : 'application/son'
+      }
+    });
+    result= result.json()
+    localStorage.setItem("user-info", JSON.stringify(result))
+    link.push("/add")
+
 
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
