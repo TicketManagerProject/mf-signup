@@ -2,54 +2,76 @@ import React, { useState } from "react";
 import { Card, Button, Form, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-
-
-
 const SignUp = () => {
   const [validated, setValidated] = useState(false);
-  const [id, setId] = useState("");
-  const [name, setName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [address, setAddress] = useState("");
-  const [email, setEmail] = useState("");
-  const [organization, setOrganization] = useState("");
-  const [password, setPassword] = useState("");
-  const [repeatPassword, setRepeatPassword] = useState("");
-  const link = Link();
+  const [error, setError] = useState("");
 
-  const handleSubmit = (event) => {
-    let item = {
-      id,
-      name,
-      lastName,
-      address,
-      email,
-      organization,
-      password,
-      repeatPassword,
-    };
-    console.warn(item);
-
-//Añadir endpoint
-    let result = fetch("",{
-      method:'POST',
-      body:JSON.stringify(item),
-      headers:{
-        "Content-Type": 'application/json',
-        "Accept" : 'application/son'
-      }
-    });
-    result= result.json()
-    localStorage.setItem("user-info", JSON.stringify(result))
-    link.push("/add")
-
-
+  const handleSubmit = async (event) => {
+    // localStorage.setItem("user-info", JSON.stringify(result))
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.preventDefault();
       event.stopPropagation();
-    }
+    } else {
+      const user_id =
+        event.target.elements.formHorizontalIdentificationNumber.value;
+      const user_first_name = event.target.elements.formHorizontalName.value;
+      const user_last_name = event.target.elements.formHorizontalLastName.value;
+      const user_address = event.target.elements.formHorizontalAddress.value;
+      const user_email = event.target.elements.formHorizontalEmail.value;
+      const user_organization =
+        event.target.elements.formHorizontalGridOrganization.value;
+      const credential_password =
+        event.target.elements.formHorizontalPassword.value;
+      try {
+        const bearer_token = await fetch(
+          "http://localhost:9090/realms/TurnsManagementApp/protocol/openid-connect/token",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: new URLSearchParams({
+              client_id: "spring-client-api-rest",
+              grant_type: "password",
+              username: "juan.cepeda06@uptc.edu.co",
+              password: "1234",
+              client_secret: "sPXUY3dDrMi8NpSlTSXxe7lbXbGzCjEe",
+            }),
+          }
+        );
+        const bearer_token_data = await bearer_token.json();
+        const access_token = bearer_token_data.access_token;
 
+        const response = await fetch(
+          "http://localhost:9091/keycloak/user/create",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${access_token}`,
+            },
+            body: JSON.stringify({
+              user_id,
+              user_first_name,
+              user_last_name,
+              user_address,
+              user_email,
+              user_organization,
+              credential_password,
+            }),
+          }
+        );
+        if (!response.ok) {
+          setError("User could not be created");
+          setTimeout(() => setError(""), 3000);
+          return;
+        }
+      } catch (error) {
+        setError("User could not be created");
+        setTimeout(() => setError(""), 3000);
+      }
+    }
     setValidated(true);
   };
 
@@ -102,7 +124,6 @@ const SignUp = () => {
                   <Form.Control
                     required
                     type="text"
-                    onChange={(e) => setId(e.target.value)}
                     placeholder="Enter identification number"
                   />
                   <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
@@ -124,12 +145,7 @@ const SignUp = () => {
                   Name *
                 </Form.Label>
                 <Col sm={8}>
-                  <Form.Control
-                    required
-                    type="text"
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Enter name"
-                  />
+                  <Form.Control required type="text" placeholder="Enter name" />
                   <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                   <Form.Control.Feedback type="invalid">
                     Invalid name.
@@ -152,7 +168,6 @@ const SignUp = () => {
                   <Form.Control
                     required
                     type="text"
-                    onChange={(e) => setLastName(e.target.value)}
                     placeholder="Enter last name"
                   />
                   <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
@@ -177,7 +192,6 @@ const SignUp = () => {
                   <Form.Control
                     required
                     type="text"
-                    onChange={(e) => setAddress(e.target.value)}
                     placeholder="Enter an address"
                   />
                   <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
@@ -202,7 +216,6 @@ const SignUp = () => {
                   <Form.Control
                     required
                     type="email"
-                    onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter an email"
                   />
                   <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
@@ -224,10 +237,7 @@ const SignUp = () => {
                   Organization *
                 </Form.Label>
                 <Col sm={8}>
-                  <Form.Select
-                    required
-                    onChange={(e) => setOrganization(e.target.value)}
-                  >
+                  <Form.Select required>
                     <option value="">Select an organization</option>
                     <option value="UPTC">UPTC</option>
                   </Form.Select>
@@ -253,7 +263,6 @@ const SignUp = () => {
                   <Form.Control
                     required
                     type="password"
-                    onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter a password"
                   />
                   <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
@@ -278,7 +287,6 @@ const SignUp = () => {
                   <Form.Control
                     required
                     type="password"
-                    onChange={(e) => setRepeatPassword(e.target.value)}
                     placeholder="Repeat password"
                   />
                   <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
